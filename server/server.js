@@ -9,6 +9,8 @@ const Todo = require("./models/Todo");
 
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+
 app.use(bodyParser.json());
 
 app.post("/todos", (req, res) => {
@@ -33,7 +35,7 @@ app.get("/todos", (req, res) => {
 });
 
 app.get("/todos/:id", (req, res) => {
-    if(!ObjectID.isValid(req.params.id)) return res.status(494).send();
+    if(!ObjectID.isValid(req.params.id)) return res.status(404).send();
 
     Todo.findById(req.params.id).then((todo) => {
         if(!todo) return res.status(404).send();
@@ -44,8 +46,8 @@ app.get("/todos/:id", (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log("Listening on 3000...");
+app.listen(PORT, () => {
+    console.log(`Listening on ${PORT}...`);
 });
 
 module.exports = { app }

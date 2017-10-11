@@ -35,15 +35,25 @@ app.get("/todos", (req, res) => {
 });
 
 app.get("/todos/:id", (req, res) => {
-    if(!ObjectID.isValid(req.params.id)) return res.status(404).send();
+    var id = req.params.id
+    if(!ObjectID.isValid(id)) return res.status(404).send();
 
-    Todo.findById(req.params.id).then((todo) => {
+    Todo.findById(id).then((todo) => {
         if(!todo) return res.status(404).send();
 
         res.send({todo});
-    }).catch((e) => {
-        res.status(400).send();
-    });
+    }).catch(e => res.status(400).send());
+});
+
+app.delete("/todos/:id", (req, res) => {
+    var id = req.params.id;
+    if(!ObjectID.isValid(id)) return res.status(404).send();
+
+    Todo.findByIdAndRemove(id).then((todo) => {
+        if(!todo) return res.status(404).send();
+
+        res.send({todo});
+    }).catch(e => res.status(400).send());
 });
 
 app.listen(PORT, () => {

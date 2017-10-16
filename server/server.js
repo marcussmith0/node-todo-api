@@ -1,6 +1,5 @@
 require("./config/config");
 
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const _ = require("lodash");
@@ -60,9 +59,7 @@ app.patch('/todos/:id', (req, res) => {
     var id = req.params.id;
     var body = _.pick(req.body, ['text', 'completed']);
   
-    if (!ObjectID.isValid(id)) {
-      return res.status(404).send();
-    }
+    if (!ObjectID.isValid(id)) return res.status(404).send();
   
     if (_.isBoolean(body.completed) && body.completed) {
       body.completedAt = new Date().getTime();
@@ -79,6 +76,19 @@ app.patch('/todos/:id', (req, res) => {
       res.send({todo});
     }).catch(e => res.status(400).send());
   });
+
+//USERS APIs
+
+app.post("/users", (req, res) => {
+    var userInfo = _.pick(req.body, ["email", "password"]);
+    var newUser = new User(userInfo);
+
+    newUser.save().then(() => {
+        return newUser.generateAuthToken();
+    }).then((token) => {
+        res.header('x-auth', token).send(newUser);
+    }).catch(e => res.status(400).send(e));
+});
 
 app.listen(PORT, () => {
     console.log(`Listening on ${PORT}...`);

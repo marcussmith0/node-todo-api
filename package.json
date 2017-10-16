@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "jsonwebtoken": "^7.1.9",
